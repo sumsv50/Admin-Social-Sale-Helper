@@ -1,7 +1,2 @@
 # Dependency directories
 node_modules/
-*.log
-*.gz
-
-src/pre-start/env
-yarn.lock
