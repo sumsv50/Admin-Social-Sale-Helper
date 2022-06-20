@@ -59,7 +59,7 @@ router.get(p.root, (async (req: Request, res: Response) => {
     }
 
     return res.status(StatusCodes.OK).json(responseFormat(true, {}, {
-      numberPosts: responeBody,
+      analysis: responeBody,
       pagination: {
         ...users,
         docs: undefined
