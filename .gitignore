@@ -4,5 +4,4 @@ package-lock.json
 *.log
 *.gz
 
-src/pre-start/env
 yarn.lock

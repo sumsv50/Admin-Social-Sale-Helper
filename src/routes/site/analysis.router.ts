@@ -10,19 +10,23 @@ const ITEM_PER_PAGE = 20;
 const router = Router();
 
 export const p = {
-  numberPosts: '/numberPosts',
-  numberPostsOfUser: '/numberPosts/:userId'
+  root: '/',
+  specificUser: '/:userId'
 } as const;
 
-router.get(p.numberPostsOfUser, (async (req: Request, res: Response) => {
+router.get(p.specificUser, (async (req: Request, res: Response) => {
   try {
     const userId = req.params.userId;
 
     const data = await analysisService.calculateNumberPostsEachEC(userId);
-    console.log(data);
+
+    const numberProducts = await analysisService.calculateNumberProduct(userId);
+    const numberOrders = await analysisService.calculateNumberOrder(userId);
 
     return res.status(StatusCodes.OK).json(responseFormat(true, {}, {
-      numberPosts: data
+      numberPosts: data,
+      numberProducts,
+      numberOrders
     }));
   } catch (err) {
     console.log(err);
@@ -30,7 +34,7 @@ router.get(p.numberPostsOfUser, (async (req: Request, res: Response) => {
   }
 }) as RequestHandler);
 
-router.get(p.numberPosts, (async (req: Request, res: Response) => {
+router.get(p.root, (async (req: Request, res: Response) => {
   try {
     const query: any = {};
     if (req.query.name) {
@@ -44,9 +48,13 @@ router.get(p.numberPosts, (async (req: Request, res: Response) => {
     for (const user of users.docs) {
       const userId = user._id;
       const numberPosts = await analysisService.calculateNumberPostsEachEC(userId);
+      const numberProducts = await analysisService.calculateNumberProduct(userId);
+      const numberOrders = await analysisService.calculateNumberOrder(userId);
       responeBody.push({
         userInfo: user,
-        numberPosts: numberPosts
+        numberPosts,
+        numberProducts,
+        numberOrders
       })
     }
 
