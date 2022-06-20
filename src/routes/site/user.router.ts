@@ -50,7 +50,7 @@ router.get(p.root, (async (req: Request, res: Response) => {
   }
 }) as RequestHandler);
 
-router.get(p.specificUser, passport.authenticate('jwt', { session: false }), (async (req: Request, res: Response) => {
+router.get(p.specificUser, (async (req: Request, res: Response) => {
   try {
     const userId = req.params.userId;
 
@@ -74,7 +74,7 @@ router.get(p.specificUser, passport.authenticate('jwt', { session: false }), (as
 })as RequestHandler);
 
  // Block user
- router.post(p.blockUser, jwtAuth(), (async (req: Request, res: Response) => {
+ router.post(p.blockUser, (async (req: Request, res: Response) => {
   try {
     const userId = <string>req.body.userId;
     const user = await userRepo.getUserInfo({ _id: userId });
@@ -108,7 +108,7 @@ router.get(p.specificUser, passport.authenticate('jwt', { session: false }), (as
 
 
  // Unblock user
- router.post(p.unBlockUser, jwtAuth(), (async (req: Request, res: Response) => {
+ router.post(p.unBlockUser, (async (req: Request, res: Response) => {
   try {
     const userId = <string>req.body.userId;
     const user = await userRepo.getUserInfo({ _id: userId });
