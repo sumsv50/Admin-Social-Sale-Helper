@@ -2,7 +2,6 @@ import { Request, Response, Router, RequestHandler } from 'express';
 import StatusCodes from 'http-status-codes';
 import { userRepo } from '@repos/site/user.repo';
 import responseFormat from '@shared/responseFormat';
-import { passport, jwtAuth } from '@middlewares/passport.middleware';
 import userService from '@services/site/user.service';
 
 const ITEM_PER_PAGE = 20;

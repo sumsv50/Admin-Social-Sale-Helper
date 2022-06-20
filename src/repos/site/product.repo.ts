@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+import mongoose from 'mongoose';
 import Product from '@models/site/product.model';
 import { IProduct } from '@models/site/product.model';
 
@@ -49,6 +50,39 @@ class ProductRepo {
   async aggregate(query: any) {
     const product = await Product.aggregate(query);
     return product;
+  }
+
+  async calculateNumberPostsEachEC(userId: string) {
+    const result = await Product.aggregate([
+      {
+        $match: {
+          createdBy:  new mongoose.Types.ObjectId(userId)
+        }
+      },
+      { $unwind: '$stockAvailable' },
+      {
+        $group: {
+          _id: '$createdBy',
+          sendoCount: {
+            $sum: {
+              $cond: [{ $eq: ["$stockAvailable.ecSite", "Sendo"] }, 1, 0]
+            }
+          },
+          tikiCount: {
+            $sum: {
+              $cond: [{ $eq: ["$stockAvailable.ecSite", "Tiki"] }, 1, 0]
+            }
+          },
+          facebookCount: {
+            $sum: {
+              $cond: [{ $eq: ["$stockAvailable.ecSite", "Facebook"] }, 1, 0]
+            }
+          },
+        }
+      }
+    ]);
+
+    return result[0] || {};
   }
 
 }
