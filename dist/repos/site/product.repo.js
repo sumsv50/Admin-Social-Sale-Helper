@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.productRepo = void 0;
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+const mongoose_1 = __importDefault(require("mongoose"));
 const product_model_1 = __importDefault(require("@models/site/product.model"));
 class ProductRepo {
     create(product) {
@@ -73,6 +74,39 @@ class ProductRepo {
         return __awaiter(this, void 0, void 0, function* () {
             const product = yield product_model_1.default.aggregate(query);
             return product;
+        });
+    }
+    calculateNumberPostsEachEC(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield product_model_1.default.aggregate([
+                {
+                    $match: {
+                        createdBy: new mongoose_1.default.Types.ObjectId(userId)
+                    }
+                },
+                { $unwind: '$stockAvailable' },
+                {
+                    $group: {
+                        _id: '$createdBy',
+                        sendoCount: {
+                            $sum: {
+                                $cond: [{ $eq: ["$stockAvailable.ecSite", "Sendo"] }, 1, 0]
+                            }
+                        },
+                        tikiCount: {
+                            $sum: {
+                                $cond: [{ $eq: ["$stockAvailable.ecSite", "Tiki"] }, 1, 0]
+                            }
+                        },
+                        facebookCount: {
+                            $sum: {
+                                $cond: [{ $eq: ["$stockAvailable.ecSite", "Facebook"] }, 1, 0]
+                            }
+                        },
+                    }
+                }
+            ]);
+            return result[0] || {};
         });
     }
 }

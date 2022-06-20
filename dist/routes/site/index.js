@@ -12,11 +12,14 @@ const post_router_1 = __importDefault(require("./post.router"));
 const report_router_1 = __importDefault(require("./report.router"));
 const notification_router_1 = __importDefault(require("./notification.router"));
 const user_router_1 = __importDefault(require("./user.router"));
+const analysis_router_1 = __importDefault(require("./analysis.router"));
+const passport_middleware_1 = require("@middlewares/passport.middleware");
 // Export the base-router
 const siteRouter = (0, express_1.Router)();
 // Setup routers
 siteRouter.use('/auth', auth_router_1.default);
-siteRouter.use('/users', user_router_1.default);
+siteRouter.use('/users', (0, passport_middleware_1.jwtAuth)(), user_router_1.default);
+siteRouter.use('/analysis', (0, passport_middleware_1.jwtAuth)(), analysis_router_1.default);
 siteRouter.use('/products', product_router_1.default);
 siteRouter.use('/orders', order_router_1.default);
 siteRouter.use('/templateComments', templateComment_router_1.default);

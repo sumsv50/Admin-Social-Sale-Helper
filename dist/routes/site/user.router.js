@@ -17,7 +17,6 @@ const express_1 = require("express");
 const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const user_repo_1 = require("@repos/site/user.repo");
 const responseFormat_1 = __importDefault(require("@shared/responseFormat"));
-const passport_middleware_1 = require("@middlewares/passport.middleware");
 const user_service_1 = __importDefault(require("@services/site/user.service"));
 const ITEM_PER_PAGE = 20;
 // Constants
@@ -55,7 +54,7 @@ router.get(exports.p.root, ((req, res) => __awaiter(void 0, void 0, void 0, func
         res.status(http_status_codes_1.default.INTERNAL_SERVER_ERROR).json((0, responseFormat_1.default)(false));
     }
 })));
-router.get(exports.p.specificUser, passport_middleware_1.passport.authenticate('jwt', { session: false }), ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get(exports.p.specificUser, ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = req.params.userId;
         const userInfo = yield user_repo_1.userRepo.getUserInfo({ _id: userId });
@@ -76,7 +75,7 @@ router.get(exports.p.specificUser, passport_middleware_1.passport.authenticate('
     }
 })));
 // Block user
-router.post(exports.p.blockUser, (0, passport_middleware_1.jwtAuth)(), ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post(exports.p.blockUser, ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = req.body.userId;
         const user = yield user_repo_1.userRepo.getUserInfo({ _id: userId });
@@ -105,7 +104,7 @@ router.post(exports.p.blockUser, (0, passport_middleware_1.jwtAuth)(), ((req, re
     }
 })));
 // Unblock user
-router.post(exports.p.unBlockUser, (0, passport_middleware_1.jwtAuth)(), ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post(exports.p.unBlockUser, ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = req.body.userId;
         const user = yield user_repo_1.userRepo.getUserInfo({ _id: userId });

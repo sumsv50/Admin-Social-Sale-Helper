@@ -1,0 +1,77 @@
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.p = void 0;
+const express_1 = require("express");
+const http_status_codes_1 = __importDefault(require("http-status-codes"));
+const user_repo_1 = require("@repos/site/user.repo");
+const responseFormat_1 = __importDefault(require("@shared/responseFormat"));
+const analysis_service_1 = __importDefault(require("@services/site/analysis.service"));
+const ITEM_PER_PAGE = 20;
+// Constants
+const router = (0, express_1.Router)();
+exports.p = {
+    root: '/',
+    specificUser: '/:userId'
+};
+router.get(exports.p.specificUser, ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = req.params.userId;
+        const data = yield analysis_service_1.default.calculateNumberPostsEachEC(userId);
+        const numberProducts = yield analysis_service_1.default.calculateNumberProduct(userId);
+        const numberOrders = yield analysis_service_1.default.calculateNumberOrder(userId);
+        return res.status(http_status_codes_1.default.OK).json((0, responseFormat_1.default)(true, {}, {
+            numberPosts: data,
+            numberProducts,
+            numberOrders
+        }));
+    }
+    catch (err) {
+        console.log(err);
+        res.status(http_status_codes_1.default.INTERNAL_SERVER_ERROR).json((0, responseFormat_1.default)(false));
+    }
+})));
+router.get(exports.p.root, ((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const query = {};
+        if (req.query.name) {
+            query.name = new RegExp(String(req.query.name), 'i');
+        }
+        const page = Number(req.query.page) || 1;
+        const users = yield user_repo_1.userRepo.findAllPagination(query, page, ITEM_PER_PAGE);
+        const responeBody = [];
+        for (const user of users.docs) {
+            const userId = user._id;
+            const numberPosts = yield analysis_service_1.default.calculateNumberPostsEachEC(userId);
+            const numberProducts = yield analysis_service_1.default.calculateNumberProduct(userId);
+            const numberOrders = yield analysis_service_1.default.calculateNumberOrder(userId);
+            responeBody.push({
+                userInfo: user,
+                numberPosts,
+                numberProducts,
+                numberOrders
+            });
+        }
+        return res.status(http_status_codes_1.default.OK).json((0, responseFormat_1.default)(true, {}, {
+            numberPosts: responeBody,
+            pagination: Object.assign(Object.assign({}, users), { docs: undefined })
+        }));
+    }
+    catch (err) {
+        console.log(err);
+        res.status(http_status_codes_1.default.INTERNAL_SERVER_ERROR).json((0, responseFormat_1.default)(false));
+    }
+})));
+// Export default
+exports.default = router;
