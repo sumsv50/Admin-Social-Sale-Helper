@@ -1,5 +1,3 @@
-import {FB} from "@shared/fb";
-import AuthConfig from "@configs/authentication";
 import { EC_SITE } from "@models/site/enum"
 import { userRepo } from "@repos/site/user.repo";
 import { tikiTokenRepo } from "@repos/tiki/tikiTokens.repo";

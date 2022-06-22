@@ -1,5 +1,5 @@
 {
-  "name": "SocialSaleHelperServer",
+  "name": "AdminSocialSaleHelperServer",
   "version": "0.0.0",
   "scripts": {
     "build": "ts-node build.ts",
@@ -76,7 +76,6 @@
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "express-async-errors": "^3.1.1",
-    "fb": "^2.0.0",
     "form-data": "^4.0.0",
     "helmet": "^5.0.2",
     "http-status-codes": "^2.2.0",
@@ -94,7 +93,6 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "request": "^2.88.2",
-    "socket.io": "^4.5.0",
     "swagger-jsdoc": "^6.1.0",
     "swagger-ui-express": "^4.3.0"
   },
@@ -104,7 +102,6 @@
     "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
-    "@types/fb": "^0.0.28",
     "@types/find": "^0.2.1",
     "@types/form-data": "^2.5.0",
     "@types/fs-extra": "^9.0.13",
